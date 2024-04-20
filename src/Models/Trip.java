@@ -3,11 +3,14 @@ package Models;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static Models.Constants.DateFormat;
 
 public class Trip {
     ZonedDateTime statedAt;
     ZonedDateTime finishedAt;
-    int durationSecs;
+    long durationSecs;
     String fromStopId;
     String toStopId;
     double changeAmount;
@@ -16,7 +19,7 @@ public class Trip {
     String pan;
     TripStatus tripStatus;
 
-    public Trip(ZonedDateTime statedAt, ZonedDateTime finishedAt, int durationSecs,
+    public Trip(ZonedDateTime statedAt, ZonedDateTime finishedAt, long durationSecs,
                 String fromStopId, String toStopId, double changeAmount, String companyId,
                 String busId, String pan, TripStatus tripStatus) {
         this.statedAt = statedAt;
@@ -32,14 +35,16 @@ public class Trip {
     }
 
     public void WriteToCSV(BufferedWriter bufferedWriter) throws IOException {
-        //TODO write to file instead
-        //TODO: format date display
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormat);
+        String startDate = statedAt == null ? "null" : statedAt.format(dateTimeFormatter);
+        String finishedDate = finishedAt == null ? "null" : finishedAt.format(dateTimeFormatter);
 
-        System.out.println(statedAt + ", " + finishedAt + ", " + durationSecs + ", " + fromStopId  + ", " + toStopId  + ", $" + changeAmount  + ", " +
-                companyId + ", " + busId  + ", " + pan + ", " + tripStatus);
+        String output = String.join(", ", startDate, finishedDate, Long.toString(durationSecs), fromStopId,
+                toStopId, Double.toString(changeAmount), companyId, busId, pan, tripStatus.toString());
 
-        bufferedWriter.write(statedAt + ", " + finishedAt + ", " + durationSecs + ", " + fromStopId  + ", " + toStopId  + ", $" + changeAmount  + ", " +
-                companyId + ", " + busId  + ", " + pan + ", " + tripStatus);
+        System.out.println(output);
+
+        bufferedWriter.write(output);
         bufferedWriter.newLine();
     }
 
@@ -47,79 +52,39 @@ public class Trip {
         return statedAt;
     }
 
-    public void setStatedAt(ZonedDateTime statedAt) {
-        this.statedAt = statedAt;
-    }
-
     public ZonedDateTime getFinishedAt() {
         return finishedAt;
     }
 
-    public void setFinishedAt(ZonedDateTime finishedAt) {
-        this.finishedAt = finishedAt;
-    }
-
-    public int getDurationSecs() {
+    public long getDurationSecs() {
         return durationSecs;
-    }
-
-    public void setDurationSecs(int durationSecs) {
-        this.durationSecs = durationSecs;
     }
 
     public String getFromStopId() {
         return fromStopId;
     }
 
-    public void setFromStopId(String fromStopId) {
-        this.fromStopId = fromStopId;
-    }
-
     public String getToStopId() {
         return toStopId;
-    }
-
-    public void setToStopId(String toStopId) {
-        this.toStopId = toStopId;
     }
 
     public double getChangeAmount() {
         return changeAmount;
     }
 
-    public void setChangeAmount(double changeAmount) {
-        this.changeAmount = changeAmount;
-    }
-
     public String getCompanyId() {
         return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 
     public String getBusId() {
         return busId;
     }
 
-    public void setBusId(String busId) {
-        this.busId = busId;
-    }
-
     public String getPan() {
         return pan;
     }
 
-    public void setPan(String pan) {
-        this.pan = pan;
-    }
-
     public TripStatus getTripStatus() {
         return tripStatus;
-    }
-
-    public void setTripStatus(TripStatus tripStatus) {
-        this.tripStatus = tripStatus;
     }
 }

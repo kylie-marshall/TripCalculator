@@ -23,11 +23,14 @@ public class Main {
         }
 
         try (BufferedWriter bufferedWriter = openWriter("./src/trips.csv")) {
+            bufferedWriter.write("Started, Finished, DurationSecs, FromStopId, ToStopId, ChargeAmount, CompanyId, BusID, PAN, Status");
+            bufferedWriter.newLine();
+
             for (Trip trip : trips) {
                 trip.WriteToCSV(bufferedWriter);
             }
         } catch (Exception e) {
-            System.out.println("Unable to output to file");
+            System.out.println("Unable to output to file due to error: " + e.getMessage());
         }
     }
 }

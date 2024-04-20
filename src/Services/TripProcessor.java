@@ -5,6 +5,7 @@ import Models.TapType;
 import Models.Trip;
 import Models.TripStatus;
 
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,34 +17,34 @@ import static Services.TripCost.calculateCost;
 public final class TripProcessor {
     public static List<Trip> processUserTrip(List<Tap> taps) {
         List<Trip> trips = new ArrayList<>();
-        //TODO: order trips or add in order during initial parsing
+        //TODO: order taps or add in order during initial parsing
         if(taps.isEmpty()) {
             return trips;
         }
-        int currentTapNo = 0;
+        int currentTapIndex = 0;
         Tap nextTap;
         do {
-            Tap currentTap = taps.size() >= currentTapNo + 1 ? taps.get(currentTapNo) : null;
+            Tap currentTap = taps.size() >= currentTapIndex + 1 ? taps.get(currentTapIndex) : null;
             if(currentTap == null) {
                 break;
             }
-            nextTap = taps.size() >= currentTapNo + 2 ? taps.get(currentTapNo + 1) : null;
+            nextTap = taps.size() >= currentTapIndex + 2 ? taps.get(currentTapIndex + 1) : null;
 
             if(isTripIncomplete(currentTap, nextTap)) {
                 trips.add(getIncompleteTrip(currentTap));
-                currentTapNo += 1;
+                currentTapIndex += 1;
                 continue;
             }
 
 
             if(isTripCancelled(currentTap, nextTap)) {
                 trips.add(getCancelledTrip(currentTap, nextTap));
-                currentTapNo += 2;
+                currentTapIndex += 2;
                 continue;
             }
 
             trips.add(getCompleteTrip(currentTap, nextTap));
-            currentTapNo += 2;
+            currentTapIndex += 2;
         } while (nextTap != null);
 
         return trips;
@@ -109,8 +110,7 @@ public final class TripProcessor {
                 TripStatus.INCOMPLETE);
     }
 
-    private static int getDurationInSeconds(ZonedDateTime currentTime, ZonedDateTime nextTime) {
-        //TODO: fix duration difference calculation
-        return 0;
+    private static long getDurationInSeconds(ZonedDateTime currentTime, ZonedDateTime nextTime) {
+        return Duration.between(currentTime, nextTime).toSeconds();
     }
 }

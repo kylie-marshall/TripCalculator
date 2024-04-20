@@ -99,9 +99,7 @@ public class TestProcessor {
         Assert.assertEquals("Bus37", trip.getBusId());
         Assert.assertEquals("5500005555555559", trip.getPan());
         Assert.assertEquals(TripStatus.CANCELLED, trip.getTripStatus());
-        //TOD0: fix duration calculation
-        Assert.assertEquals(0, trip.getDurationSecs());
-        //TOD0: fix cost calculation
+        Assert.assertEquals(60, trip.getDurationSecs());
         Assert.assertEquals(0, trip.getChangeAmount(), 0);
     }
     @Test
@@ -137,8 +135,7 @@ public class TestProcessor {
         Assert.assertEquals("Bus37", trip.getBusId());
         Assert.assertEquals("5500005555555559", trip.getPan());
         Assert.assertEquals(TripStatus.COMPLETED, trip.getTripStatus());
-        //TOD0: fix duration calculation
-        Assert.assertEquals(0, trip.getDurationSecs());
+        Assert.assertEquals(60, trip.getDurationSecs());
         Assert.assertEquals(3.25, trip.getChangeAmount(), 0);
     }
 }
