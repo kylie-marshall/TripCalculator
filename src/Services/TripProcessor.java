@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static Services.TripCost.CANCELLED_TRIP_COST;
-import static Services.TripCost.CalculateCost;
+import static Services.TripCost.calculateCost;
 
 public final class TripProcessor {
     public static List<Trip> processUserTrip(List<Tap> taps) {
@@ -20,22 +20,42 @@ public final class TripProcessor {
         if(taps.isEmpty()) {
             return trips;
         }
-        Tap currentTap = taps.getFirst();
-        if(taps.size() == 1) {
-            trips.add(getIncompleteTrip(currentTap));
-            return trips;
-        }
-        Tap nextTap = taps.get(1);
+        int currentTapNo = 0;
+        Tap nextTap;
         do {
+            Tap currentTap = taps.size() >= currentTapNo + 1 ? taps.get(currentTapNo) : null;
+            if(currentTap == null) {
+                break;
+            }
+            nextTap = taps.size() >= currentTapNo + 2 ? taps.get(currentTapNo + 1) : null;
+
+            if(isTripIncomplete(currentTap, nextTap)) {
+                trips.add(getIncompleteTrip(currentTap));
+                currentTapNo += 1;
+                continue;
+            }
+
+
             if(isTripCancelled(currentTap, nextTap)) {
                 trips.add(getCancelledTrip(currentTap, nextTap));
+                currentTapNo += 2;
+                continue;
             }
-            nextTap = null;
+
+            trips.add(getCompleteTrip(currentTap, nextTap));
+            currentTapNo += 2;
         } while (nextTap != null);
 
         return trips;
     }
 
+    private static boolean isTripIncomplete(Tap currentTap, Tap nextTap){
+        return currentTap.getTapType() == TapType.OFF
+                || nextTap == null
+                || nextTap.getTapType() == TapType.ON
+                || !Objects.equals(currentTap.getBusId(), nextTap.getBusId())
+                || !Objects.equals(currentTap.getCompanyId(), nextTap.getCompanyId());
+    }
     private static boolean isTripCancelled(Tap currentTap, Tap nextTap) {
         return Objects.equals(currentTap.getCompanyId(), nextTap.getCompanyId()) &&
                 Objects.equals(currentTap.getBusId(), nextTap.getBusId()) &&
@@ -44,9 +64,30 @@ public final class TripProcessor {
     }
 
     private static Trip getCancelledTrip(Tap currentTap, Tap nextTap) {
-        //TODO: fix duration difference calculation
-        return new Trip(currentTap.getDateTime(), nextTap.getDateTime(), 0, currentTap.getStopId(), nextTap.getStopId(), CANCELLED_TRIP_COST,
-                currentTap.getCompanyId(), currentTap.getBusId(), currentTap.getPan(), TripStatus.CANCELLED);
+        return new Trip(currentTap.getDateTime(),
+                nextTap.getDateTime(),
+                getDurationInSeconds(currentTap.getDateTime(), nextTap.getDateTime()),
+                currentTap.getStopId(),
+                nextTap.getStopId(),
+                CANCELLED_TRIP_COST,
+                currentTap.getCompanyId(),
+                currentTap.getBusId(),
+                currentTap.getPan(),
+                TripStatus.CANCELLED);
+    }
+
+    private static Trip getCompleteTrip(Tap currentTap, Tap nextTap) {
+
+        return new Trip(currentTap.getDateTime(),
+                nextTap.getDateTime(),
+                getDurationInSeconds(currentTap.getDateTime(), nextTap.getDateTime()),
+                currentTap.getStopId(),
+                nextTap.getStopId(),
+                calculateCost(currentTap.getStopId(), nextTap.getStopId()),
+                currentTap.getCompanyId(),
+                currentTap.getBusId(),
+                currentTap.getPan(),
+                TripStatus.COMPLETED);
     }
 
     private static Trip getIncompleteTrip(Tap currentTap) {
@@ -56,7 +97,20 @@ public final class TripProcessor {
         String toStop = currentTap.getTapType() == TapType.ON ? null : currentTap.getStopId();
 
         return new Trip(
-                startedAt, finishedAt, 0, fromStop, toStop, CalculateCost(fromStop, toStop),
-                currentTap.getCompanyId(), currentTap.getBusId(), currentTap.getPan(), TripStatus.INCOMPLETED);
+                startedAt,
+                finishedAt,
+                0,
+                fromStop,
+                toStop,
+                calculateCost(fromStop, toStop),
+                currentTap.getCompanyId(),
+                currentTap.getBusId(),
+                currentTap.getPan(),
+                TripStatus.INCOMPLETED);
+    }
+
+    private static int getDurationInSeconds(ZonedDateTime currentTime, ZonedDateTime nextTime) {
+        //TODO: fix duration difference calculation
+        return 0;
     }
 }
