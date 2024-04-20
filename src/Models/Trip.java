@@ -1,5 +1,7 @@
 package Models;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.time.ZonedDateTime;
 
 public class Trip {
@@ -29,13 +31,16 @@ public class Trip {
         this.tripStatus = tripStatus;
     }
 
-    public void WriteToCSV() {
+    public void WriteToCSV(BufferedWriter bufferedWriter) throws IOException {
         //TODO write to file instead
         //TODO: format date display
 
         System.out.println(statedAt + ", " + finishedAt + ", " + durationSecs + ", " + fromStopId  + ", " + toStopId  + ", $" + changeAmount  + ", " +
                 companyId + ", " + busId  + ", " + pan + ", " + tripStatus);
 
+        bufferedWriter.write(statedAt + ", " + finishedAt + ", " + durationSecs + ", " + fromStopId  + ", " + toStopId  + ", $" + changeAmount  + ", " +
+                companyId + ", " + busId  + ", " + pan + ", " + tripStatus);
+        bufferedWriter.newLine();
     }
 
     public ZonedDateTime getStatedAt() {
