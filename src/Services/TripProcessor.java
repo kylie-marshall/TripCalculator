@@ -7,14 +7,22 @@ import Models.TripStatus;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static Services.TripCost.CANCELLED_TRIP_COST;
 import static Services.TripCost.calculateCost;
 
 public final class TripProcessor {
+    public static List<Trip> processTaps(HashMap<String, List<Tap>> taps) {
+        List<Trip> trips = new ArrayList<>();
+
+        for(Map.Entry<String, List<Tap>> userTaps : taps.entrySet()) {
+            List<Trip> userTrips = processUserTrip(userTaps.getValue());
+            trips.addAll(userTrips);
+        }
+        return trips;
+    }
+
     public static List<Trip> processUserTrip(List<Tap> taps) {
         List<Trip> trips = new ArrayList<>();
         //TODO: order taps or add in order during initial parsing

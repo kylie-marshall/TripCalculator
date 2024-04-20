@@ -31,8 +31,7 @@ public final class TripCost {
             return 5.50;
         }
 
-
-
+        System.out.println("Unable to find stop cost information");
         return 0;
     }
 }

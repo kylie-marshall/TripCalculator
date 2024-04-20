@@ -138,4 +138,13 @@ public class TestProcessor {
         Assert.assertEquals(60, trip.getDurationSecs());
         Assert.assertEquals(3.25, trip.getChangeAmount(), 0);
     }
+
+    @Test
+    public void processUserTrip_empty_should_return_no_trips() {
+        List<Tap> taps = new ArrayList<>();
+
+        List<Trip> trips = processUserTrip(taps);
+
+        Assert.assertEquals(0, trips.size());
+    }
 }

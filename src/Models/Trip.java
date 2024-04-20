@@ -40,7 +40,7 @@ public class Trip {
         String finishedDate = finishedAt == null ? "null" : finishedAt.format(dateTimeFormatter);
 
         String output = String.join(", ", startDate, finishedDate, Long.toString(durationSecs), fromStopId,
-                toStopId, Double.toString(changeAmount), companyId, busId, pan, tripStatus.toString());
+                toStopId, "$" + changeAmount, companyId, busId, pan, tripStatus.toString());
 
         System.out.println(output);
 

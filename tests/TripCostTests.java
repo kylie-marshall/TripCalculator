@@ -13,7 +13,7 @@ public class TripCostTests {
 
     @ParameterizedTest
     @MethodSource("stopProvider")
-    public void calculateCost_should(String fromStop, String toStop, double expectedValue) {
+    public void calculateCost_should_produce_correct_cost(String fromStop, String toStop, double expectedValue) {
         Assertions.assertEquals(expectedValue, calculateCost(fromStop, toStop), 0);
     }
 
@@ -21,13 +21,18 @@ public class TripCostTests {
         return Stream.of(
             Arguments.arguments("Stop1", "Stop2", 3.25),
             Arguments.arguments("Stop2", "Stop3", 5.5),
+            Arguments.arguments("Stop3", "Stop1", 7.30),
+            Arguments.arguments("Stop2", "Stop1", 3.25),
+            Arguments.arguments("Stop3", "Stop2", 5.5),
             Arguments.arguments("Stop1", "Stop3", 7.30),
             Arguments.arguments("Stop1", null, 7.30),
             Arguments.arguments("Stop2", null, 5.50),
             Arguments.arguments("Stop3", null, 7.30),
             Arguments.arguments(null, "Stop1", 7.30),
             Arguments.arguments(null, "Stop2", 5.50),
-            Arguments.arguments(null, "Stop3", 7.30)
+            Arguments.arguments(null, "Stop3", 7.30),
+            Arguments.arguments(null, "Stop4", 0),
+            Arguments.arguments("Stop4", "Stop3", 0)
         );
     }
 }
