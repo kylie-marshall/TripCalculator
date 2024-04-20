@@ -37,8 +37,7 @@ public class TestProcessor {
         Assert.assertEquals("5500005555555559", trip.getPan());
         Assert.assertEquals(TripStatus.INCOMPLETED, trip.getTripStatus());
         Assert.assertEquals(0, trip.getDurationSecs());
-        //TOD0: fix cost calculation
-        Assert.assertEquals(0, trip.getChangeAmount(), 0);
+        Assert.assertEquals(7.3, trip.getChangeAmount(), 0);
     }
     @Test
     public void processUserTrip_should_return_one_end_incomplete_trip() {
@@ -65,8 +64,7 @@ public class TestProcessor {
         Assert.assertEquals("5500005555555559", trip.getPan());
         Assert.assertEquals(TripStatus.INCOMPLETED, trip.getTripStatus());
         Assert.assertEquals(0, trip.getDurationSecs());
-        //TOD0: fix cost calculation
-        Assert.assertEquals(0, trip.getChangeAmount(), 0);
+        Assert.assertEquals(7.3, trip.getChangeAmount(), 0);
     }
     @Test
     public void processUserTrip_should_return_one_cancelled_trip() {
