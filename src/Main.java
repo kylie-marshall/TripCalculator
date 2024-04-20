@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static Services.TripProcessor.processUserTrip;
+
 public class Main {
     public static void main(String[] args) {
         //input data
@@ -25,23 +27,12 @@ public class Main {
                 "5500005555555559"
         ));
 
-        taps.putIfAbsent("5500005555555559", new ArrayList<Tap>() { });
-        taps.get("5500005555555559").add(new Tap(
-                2,
-                "22-01-2023 13:05:00",
-                TapType.OFF,
-                "Stop1",
-                "Company1",
-                "Bus37",
-                "5500005555555559"
-        ));
-
         ArrayList<Trip> trips = new ArrayList<>();
         for(Map.Entry<String, List<Tap>> entry : taps.entrySet()) { //TODO: fix format of for loop
             String user = entry.getKey();
             List<Tap> userTaps = entry.getValue();
 
-            List<Trip> userTrips = new TripProcessor().processUserTrip(user, userTaps);
+            List<Trip> userTrips = processUserTrip(userTaps);
             trips.addAll(userTrips);
         }
 

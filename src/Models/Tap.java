@@ -16,7 +16,7 @@ public class Tap {
 
     public Tap(int id, String dateTime, TapType tapType, String stopId, String companyId, String busId, String pan) {
         this.id = id;
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").withZone(ZoneOffset.UTC);
         // TODO: UTC format?
         this.dateTime = ZonedDateTime.parse(dateTime, dateTimeFormatter);
         this.tapType = tapType;
@@ -26,4 +26,31 @@ public class Tap {
         this.pan = pan;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public ZonedDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public TapType getTapType() {
+        return tapType;
+    }
+
+    public String getStopId() {
+        return stopId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public String getPan() {
+        return pan;
+    }
+
+    public String getBusId() {
+        return busId;
+    }
 }
