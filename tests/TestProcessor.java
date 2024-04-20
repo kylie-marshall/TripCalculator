@@ -28,14 +28,14 @@ public class TestProcessor {
 
         Assert.assertEquals(1, trips.size());
         Trip trip = trips.getFirst();
-        Assert.assertNotNull(trip.getStatedAt());
+        Assert.assertNotNull(trip.getStatedAt()); //TODO: assert date values correctly
         Assert.assertNull(trip.getFinishedAt());
         Assert.assertEquals("Stop1", trip.getFromStopId());
         Assert.assertNull(trip.getToStopId());
         Assert.assertEquals("Company1", trip.getCompanyId());
         Assert.assertEquals("Bus37", trip.getBusId());
         Assert.assertEquals("5500005555555559", trip.getPan());
-        Assert.assertEquals(TripStatus.INCOMPLETED, trip.getTripStatus());
+        Assert.assertEquals(TripStatus.INCOMPLETE, trip.getTripStatus());
         Assert.assertEquals(0, trip.getDurationSecs());
         Assert.assertEquals(7.3, trip.getChangeAmount(), 0);
     }
@@ -62,7 +62,7 @@ public class TestProcessor {
         Assert.assertEquals("Company1", trip.getCompanyId());
         Assert.assertEquals("Bus37", trip.getBusId());
         Assert.assertEquals("5500005555555559", trip.getPan());
-        Assert.assertEquals(TripStatus.INCOMPLETED, trip.getTripStatus());
+        Assert.assertEquals(TripStatus.INCOMPLETE, trip.getTripStatus());
         Assert.assertEquals(0, trip.getDurationSecs());
         Assert.assertEquals(7.3, trip.getChangeAmount(), 0);
     }

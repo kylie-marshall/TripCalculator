@@ -31,8 +31,10 @@ public class Trip {
 
     public void WriteToCSV() {
         //TODO write to file instead
-        System.out.printf(statedAt + " " + finishedAt + " " + durationSecs + " " + fromStopId  + " " + toStopId  + " " + changeAmount  + " " + companyId
-                + " " + busId  + " " + pan + " " + tripStatus);
+        //TODO: format date display
+
+        System.out.println(statedAt + ", " + finishedAt + ", " + durationSecs + ", " + fromStopId  + ", " + toStopId  + ", $" + changeAmount  + ", " +
+                companyId + ", " + busId  + ", " + pan + ", " + tripStatus);
 
     }
 

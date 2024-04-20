@@ -25,6 +25,19 @@ public class Tap {
         this.busId = busId;
         this.pan = pan;
     }
+    public Tap(String commaSeparatedInput) {
+        String[] fields = commaSeparatedInput.split(", ");
+
+        this.id = Integer.parseInt(fields[0]);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").withZone(ZoneOffset.UTC);
+        // TODO: UTC format?
+        this.dateTime = ZonedDateTime.parse(fields[1], dateTimeFormatter);
+        this.tapType = TapType.valueOf(fields[2].toUpperCase());
+        this.stopId = fields[3];
+        this.companyId = fields[4];
+        this.busId = fields[5];
+        this.pan = fields[6];
+    }
 
     public int getId() {
         return id;

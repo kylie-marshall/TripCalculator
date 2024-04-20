@@ -106,7 +106,7 @@ public final class TripProcessor {
                 currentTap.getCompanyId(),
                 currentTap.getBusId(),
                 currentTap.getPan(),
-                TripStatus.INCOMPLETED);
+                TripStatus.INCOMPLETE);
     }
 
     private static int getDurationInSeconds(ZonedDateTime currentTime, ZonedDateTime nextTime) {
