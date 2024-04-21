@@ -1,7 +1,6 @@
 import Models.*;
 import Services.TapProcessor;
 import Services.TripSystem;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +43,7 @@ public class TestProcessor {
 
         Assertions.assertEquals(1, trips.size());
         UserTrip trip = trips.getFirst();
-        Assertions.assertNotNull(trip.getStatedAt()); //TODO: assert date values correctly
+        Assertions.assertNotNull(trip.getStartedAt()); //TODO: assert date values correctly
         Assertions.assertNull(trip.getFinishedAt());
         Assertions.assertEquals("Stop1", trip.getFromStopId());
         Assertions.assertNull(trip.getToStopId());
@@ -72,7 +71,7 @@ public class TestProcessor {
 
         Assertions.assertEquals(1, trips.size());
         UserTrip trip = trips.getFirst();
-        Assertions.assertNull(trip.getStatedAt());
+        Assertions.assertNull(trip.getStartedAt());
         Assertions.assertNotNull(trip.getFinishedAt());
         Assertions.assertEquals("Stop1", trip.getToStopId());
         Assertions.assertNull(trip.getFromStopId());
@@ -109,7 +108,7 @@ public class TestProcessor {
 
         Assertions.assertEquals(1, trips.size());
         UserTrip trip = trips.getFirst();
-        Assertions.assertNotNull(trip.getStatedAt());
+        Assertions.assertNotNull(trip.getStartedAt());
         Assertions.assertNotNull(trip.getFinishedAt());
         Assertions.assertEquals("Stop1", trip.getToStopId());
         Assertions.assertEquals("Stop1", trip.getFromStopId());
@@ -146,7 +145,7 @@ public class TestProcessor {
 
         Assertions.assertEquals(1, trips.size());
         UserTrip trip = trips.getFirst();
-        Assertions.assertNotNull(trip.getStatedAt());
+        Assertions.assertNotNull(trip.getStartedAt());
         Assertions.assertNotNull(trip.getFinishedAt());
         Assertions.assertEquals("Stop1", trip.getFromStopId());
         Assertions.assertEquals("Stop2", trip.getToStopId());

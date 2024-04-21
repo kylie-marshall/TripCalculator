@@ -12,19 +12,19 @@ import static Services.CSVWriter.writeTripsToCSV;
 
 public class Main {
     public static void main(String[] args) {
-        TripSystem tripSystem = new TripSystem();
+        TripSystem company1TripSystem = new TripSystem();
 
-        Stop stop1 = tripSystem.addStop("Stop1");
-        Stop stop2 = tripSystem.addStop("Stop2");
-        Stop stop3 = tripSystem.addStop("Stop3");
+        Stop stop1 = company1TripSystem.addStop("Stop1");
+        Stop stop2 = company1TripSystem.addStop("Stop2");
+        Stop stop3 = company1TripSystem.addStop("Stop3");
 
-        tripSystem.addTrip(stop1, stop2, 3.25);
-        tripSystem.addTrip(stop2, stop3, 5.50);
-        tripSystem.addTrip(stop1, stop3, 7.30);
+        company1TripSystem.addTrip(stop1, stop2, 3.25);
+        company1TripSystem.addTrip(stop2, stop3, 5.50);
+        company1TripSystem.addTrip(stop1, stop3, 7.30);
 
         HashMap<String, List<Tap>> taps = parseCSV("./src/taps.csv");
 
-        TapProcessor tapProcessor = new TapProcessor(tripSystem);
+        TapProcessor tapProcessor = new TapProcessor(company1TripSystem);
         List<UserTrip> trips = tapProcessor.processTaps(taps);
 
         writeTripsToCSV(trips);

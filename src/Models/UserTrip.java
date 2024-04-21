@@ -8,27 +8,27 @@ import java.time.format.DateTimeFormatter;
 
 import static Models.Constants.DateFormat;
 
-public class UserTrip {
-    ZonedDateTime statedAt;
+public abstract class UserTrip {
+    ZonedDateTime startedAt;
     ZonedDateTime finishedAt;
     long durationSecs;
-    Stop fromStopId;
-    Stop toStopId;
+    Stop fromStop;
+    Stop toStop;
     double changeAmount;
     String companyId;
     String busId;
     String pan;
     TripStatus tripStatus;
 
-    public UserTrip(ZonedDateTime statedAt, ZonedDateTime finishedAt,
-                    Stop fromStop, Stop toStop, double changeAmount, String companyId,
+    public UserTrip(ZonedDateTime startedAt, ZonedDateTime finishedAt,
+                    Stop fromStop, Stop toStop, double chargeAmount, String companyId,
                     String busId, String pan, TripStatus tripStatus) {
-        this.statedAt = statedAt;
+        this.startedAt = startedAt;
         this.finishedAt = finishedAt;
         this.durationSecs = calculateTripDuration();
-        this.fromStopId = fromStop;
-        this.toStopId = toStop;
-        this.changeAmount = changeAmount;
+        this.fromStop = fromStop;
+        this.toStop = toStop;
+        this.changeAmount = chargeAmount;
         this.companyId = companyId;
         this.busId = busId;
         this.pan = pan;
@@ -37,12 +37,12 @@ public class UserTrip {
 
     public void WriteToCSV(BufferedWriter bufferedWriter) throws IOException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormat);
-        String startDate = statedAt == null ? "null" : statedAt.format(dateTimeFormatter);
+        String startDate = startedAt == null ? "null" : startedAt.format(dateTimeFormatter);
         String finishedDate = finishedAt == null ? "null" : finishedAt.format(dateTimeFormatter);
 
         String output = String.join(", ", startDate, finishedDate, Long.toString(durationSecs),
-                fromStopId ==  null ? null : fromStopId.toString(),
-                toStopId ==  null ? null : toStopId.toString(),
+                fromStop ==  null ? null : fromStop.toString(),
+                toStop ==  null ? null : toStop.toString(),
                 "$" + changeAmount, companyId, busId, pan, tripStatus.toString());
 
         System.out.println(output);
@@ -51,8 +51,8 @@ public class UserTrip {
         bufferedWriter.newLine();
     }
 
-    public ZonedDateTime getStatedAt() {
-        return statedAt;
+    public ZonedDateTime getStartedAt() {
+        return startedAt;
     }
 
     public ZonedDateTime getFinishedAt() {
@@ -64,11 +64,11 @@ public class UserTrip {
     }
 
     public String getFromStopId() {
-        return fromStopId ==  null ? null : fromStopId.toString();
+        return fromStop ==  null ? null : fromStop.toString();
     }
 
     public String getToStopId() {
-        return toStopId ==  null ? null : toStopId.toString();
+        return toStop ==  null ? null : toStop.toString();
     }
 
     public double getChangeAmount() {
@@ -92,9 +92,9 @@ public class UserTrip {
     }
 
     private long calculateTripDuration() {
-        if(statedAt == null || finishedAt == null) {
+        if(startedAt == null || finishedAt == null) {
             return 0;
         }
-        return Duration.between(statedAt, finishedAt).toSeconds();
+        return Duration.between(startedAt, finishedAt).toSeconds();
     }
 }

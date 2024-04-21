@@ -10,6 +10,7 @@ public class TripSystem {
     HashMap<String, Double> highestCostForStop;
 
     public static double CANCELLED_TRIP_COST = 0;
+    public static double UNKNOWN_TRIP_COST = 0;
 
     public TripSystem() {
         this.tripCosts = new HashMap<>();
@@ -47,7 +48,7 @@ public class TripSystem {
         TripCost trip = tripCosts.get(fromStopId + "_" + toStopId);
         if (trip == null) {
             System.out.println("Unable to get trip cost as trip does not exist");
-            return -1;
+            return UNKNOWN_TRIP_COST;
         }
         return trip.getCost();
     }
@@ -55,7 +56,7 @@ public class TripSystem {
         Double value = highestCostForStop.get(stop.toString());
         if (value == null) {
             System.out.println("Unable to get trip cost as stop does not exist");
-            return -1;
+            return UNKNOWN_TRIP_COST;
         }
         return value;
     }

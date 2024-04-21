@@ -44,8 +44,8 @@ public class TripCostTests {
             Arguments.arguments(null, new Stop("Stop1"), 7.30),
             Arguments.arguments(null, new Stop("Stop2"), 5.50),
             Arguments.arguments(null, new Stop("Stop3"), 7.30),
-            Arguments.arguments(null, new Stop("Stop4"), -1),
-            Arguments.arguments(new Stop("Stop4"), new Stop("Stop3"), -1)
+            Arguments.arguments(null, new Stop("Stop4"), 0),
+            Arguments.arguments(new Stop("Stop4"), new Stop("Stop3"), 0)
         );
     }
 }

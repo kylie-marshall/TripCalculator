@@ -26,6 +26,9 @@ Started, Finished, DurationSecs, FromStopId, ToStopId, ChargeAmount, CompanyId, 
 Build and run in Intellij IDEA. 
 Apologies, I'm trying to learn the command line tools. 
 
+
 ### Assumptions
 
-- 
+- Taps are in order of id/date so no sorting is required.
+- The reviewers of this code understand my experience is mainly .Net which made things more difficult. For example, knowing which file reading/writer to use.
+- If there is no known cost for the trip eg stop doesnt exist, use 0. Log this information to monitoring with alerts.
