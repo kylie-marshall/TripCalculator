@@ -9,11 +9,12 @@ import java.util.List;
 
 public final class CSVWriter {
 
+
     /**
      * Open new csv file and write headings and trips, one per line
      */
-    public static void writeTripsToCSV(List<UserTrip> trips) {
-        try (BufferedWriter bufferedWriter = openWriter("./src/trips.csv")) {
+    public static void writeTripsToCSV(BufferedWriter writer, List<UserTrip> trips) {
+        try (BufferedWriter bufferedWriter = writer) {
             bufferedWriter.write("Started, Finished, DurationSecs, FromStopId, ToStopId, ChargeAmount, CompanyId, BusID, PAN, Status");
             bufferedWriter.newLine();
 
@@ -24,8 +25,7 @@ public final class CSVWriter {
             System.out.println("Unable to output to file due to error: " + e.getMessage());
         }
     }
-
-    private static BufferedWriter openWriter(String filename) throws IOException {
+    public static BufferedWriter openWriter(String filename) throws IOException {
         FileWriter writer = new FileWriter(filename);
         return new BufferedWriter(writer);
     }
