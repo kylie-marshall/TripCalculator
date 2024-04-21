@@ -12,10 +12,10 @@ public final class CSVParser {
     /**
      * Load csv file and parse taps into hashmap
      */
-    public static HashMap<String, List<Tap>> parseCSV(String filename){
+    public static HashMap<String, List<Tap>> parseCSV(BufferedReader reader){
 
         HashMap<String, List<Tap>> taps = new HashMap<>();
-        try (BufferedReader reader = openReader(filename)) {
+        try {
             //discard first line headings
             reader.readLine();
 
@@ -35,7 +35,7 @@ public final class CSVParser {
         return taps;
     }
 
-    private static BufferedReader openReader(String filename) throws IOException {
+    public static BufferedReader openReader(String filename) throws IOException {
         FileReader file = new FileReader(filename);
         return new BufferedReader(file);
     }
