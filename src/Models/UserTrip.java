@@ -2,31 +2,32 @@ package Models;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static Models.Constants.DateFormat;
 
-public class Trip {
+public class UserTrip {
     ZonedDateTime statedAt;
     ZonedDateTime finishedAt;
     long durationSecs;
-    String fromStopId;
-    String toStopId;
+    Stop fromStopId;
+    Stop toStopId;
     double changeAmount;
     String companyId;
     String busId;
     String pan;
     TripStatus tripStatus;
 
-    public Trip(ZonedDateTime statedAt, ZonedDateTime finishedAt, long durationSecs,
-                String fromStopId, String toStopId, double changeAmount, String companyId,
-                String busId, String pan, TripStatus tripStatus) {
+    public UserTrip(ZonedDateTime statedAt, ZonedDateTime finishedAt,
+                    Stop fromStop, Stop toStop, double changeAmount, String companyId,
+                    String busId, String pan, TripStatus tripStatus) {
         this.statedAt = statedAt;
         this.finishedAt = finishedAt;
-        this.durationSecs = durationSecs;
-        this.fromStopId = fromStopId;
-        this.toStopId = toStopId;
+        this.durationSecs = calculateTripDuration();
+        this.fromStopId = fromStop;
+        this.toStopId = toStop;
         this.changeAmount = changeAmount;
         this.companyId = companyId;
         this.busId = busId;
@@ -39,8 +40,10 @@ public class Trip {
         String startDate = statedAt == null ? "null" : statedAt.format(dateTimeFormatter);
         String finishedDate = finishedAt == null ? "null" : finishedAt.format(dateTimeFormatter);
 
-        String output = String.join(", ", startDate, finishedDate, Long.toString(durationSecs), fromStopId,
-                toStopId, "$" + changeAmount, companyId, busId, pan, tripStatus.toString());
+        String output = String.join(", ", startDate, finishedDate, Long.toString(durationSecs),
+                fromStopId ==  null ? null : fromStopId.toString(),
+                toStopId ==  null ? null : toStopId.toString(),
+                "$" + changeAmount, companyId, busId, pan, tripStatus.toString());
 
         System.out.println(output);
 
@@ -61,11 +64,11 @@ public class Trip {
     }
 
     public String getFromStopId() {
-        return fromStopId;
+        return fromStopId ==  null ? null : fromStopId.toString();
     }
 
     public String getToStopId() {
-        return toStopId;
+        return toStopId ==  null ? null : toStopId.toString();
     }
 
     public double getChangeAmount() {
@@ -86,5 +89,12 @@ public class Trip {
 
     public TripStatus getTripStatus() {
         return tripStatus;
+    }
+
+    private long calculateTripDuration() {
+        if(statedAt == null || finishedAt == null) {
+            return 0;
+        }
+        return Duration.between(statedAt, finishedAt).toSeconds();
     }
 }

@@ -1,30 +1,30 @@
 package Services;
 
-import Models.Tap;
-import Models.TapType;
-import Models.Trip;
-import Models.TripStatus;
+import Models.*;
 
-import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static Services.TripCost.CANCELLED_TRIP_COST;
-import static Services.TripCost.calculateCost;
+import static Services.TripSystem.CANCELLED_TRIP_COST;
 
-public final class TripProcessor {
-    public static List<Trip> processTaps(HashMap<String, List<Tap>> taps) {
-        List<Trip> trips = new ArrayList<>();
+public class TapProcessor {
+    TripSystem tripSystem;
+    public TapProcessor(TripSystem tripSystem) {
+        this.tripSystem = tripSystem;
+    }
+
+    public List<UserTrip> processTaps(HashMap<String, List<Tap>> taps) {
+        List<UserTrip> trips = new ArrayList<>();
 
         for(Map.Entry<String, List<Tap>> userTaps : taps.entrySet()) {
-            List<Trip> userTrips = processUserTrip(userTaps.getValue());
+            List<UserTrip> userTrips = processUserTrip(userTaps.getValue());
             trips.addAll(userTrips);
         }
         return trips;
     }
 
-    public static List<Trip> processUserTrip(List<Tap> taps) {
-        List<Trip> trips = new ArrayList<>();
+    public List<UserTrip> processUserTrip(List<Tap> taps) {
+        List<UserTrip> trips = new ArrayList<>();
         //TODO: order taps or add in order during initial parsing
         if(taps.isEmpty()) {
             return trips;
@@ -43,7 +43,6 @@ public final class TripProcessor {
                 currentTapIndex += 1;
                 continue;
             }
-
 
             if(isTripCancelled(currentTap, nextTap)) {
                 trips.add(getCancelledTrip(currentTap, nextTap));
@@ -68,16 +67,16 @@ public final class TripProcessor {
     private static boolean isTripCancelled(Tap currentTap, Tap nextTap) {
         return Objects.equals(currentTap.getCompanyId(), nextTap.getCompanyId()) &&
                 Objects.equals(currentTap.getBusId(), nextTap.getBusId()) &&
-                Objects.equals(currentTap.getStopId(), nextTap.getStopId()) &&
+                Objects.equals(currentTap.getStop(), nextTap.getStop()) &&
                 currentTap.getTapType() == TapType.ON && nextTap.getTapType() == TapType.OFF;
     }
 
-    private static Trip getCancelledTrip(Tap currentTap, Tap nextTap) {
-        return new Trip(currentTap.getDateTime(),
+    private static UserTrip getCancelledTrip(Tap currentTap, Tap nextTap) {
+
+        return new UserTrip(currentTap.getDateTime(),
                 nextTap.getDateTime(),
-                getDurationInSeconds(currentTap.getDateTime(), nextTap.getDateTime()),
-                currentTap.getStopId(),
-                nextTap.getStopId(),
+                currentTap.getStop(),
+                nextTap.getStop(),
                 CANCELLED_TRIP_COST,
                 currentTap.getCompanyId(),
                 currentTap.getBusId(),
@@ -85,40 +84,34 @@ public final class TripProcessor {
                 TripStatus.CANCELLED);
     }
 
-    private static Trip getCompleteTrip(Tap currentTap, Tap nextTap) {
+    private UserTrip getCompleteTrip(Tap currentTap, Tap nextTap) {
 
-        return new Trip(currentTap.getDateTime(),
+        return new UserTrip(currentTap.getDateTime(),
                 nextTap.getDateTime(),
-                getDurationInSeconds(currentTap.getDateTime(), nextTap.getDateTime()),
-                currentTap.getStopId(),
-                nextTap.getStopId(),
-                calculateCost(currentTap.getStopId(), nextTap.getStopId()),
+                currentTap.getStop(),
+                nextTap.getStop(),
+                this.tripSystem.calculateCostBetweenStops(currentTap.getStop(), nextTap.getStop()),
                 currentTap.getCompanyId(),
                 currentTap.getBusId(),
                 currentTap.getPan(),
                 TripStatus.COMPLETED);
     }
 
-    private static Trip getIncompleteTrip(Tap currentTap) {
+    private UserTrip getIncompleteTrip(Tap currentTap) {
         ZonedDateTime startedAt = currentTap.getTapType() == TapType.ON ? currentTap.getDateTime() : null;
         ZonedDateTime finishedAt = currentTap.getTapType() == TapType.ON ? null : currentTap.getDateTime();
-        String fromStop = currentTap.getTapType() == TapType.ON ? currentTap.getStopId() : null;
-        String toStop = currentTap.getTapType() == TapType.ON ? null : currentTap.getStopId();
+        Stop fromStop = currentTap.getTapType() == TapType.ON ? currentTap.getStop() : null;
+        Stop toStop = currentTap.getTapType() == TapType.ON ? null : currentTap.getStop();
 
-        return new Trip(
+        return new UserTrip(
                 startedAt,
                 finishedAt,
-                0,
                 fromStop,
                 toStop,
-                calculateCost(fromStop, toStop),
+                this.tripSystem.calculateCostBetweenStops(fromStop, toStop),
                 currentTap.getCompanyId(),
                 currentTap.getBusId(),
                 currentTap.getPan(),
                 TripStatus.INCOMPLETE);
-    }
-
-    private static long getDurationInSeconds(ZonedDateTime currentTime, ZonedDateTime nextTime) {
-        return Duration.between(currentTime, nextTime).toSeconds();
     }
 }

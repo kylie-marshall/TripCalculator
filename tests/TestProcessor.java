@@ -1,21 +1,37 @@
-import Models.Tap;
-import Models.TapType;
-import Models.Trip;
-import Models.TripStatus;
+import Models.*;
+import Services.TapProcessor;
+import Services.TripSystem;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import static Services.TripProcessor.processUserTrip;
-
 public class TestProcessor {
+    TapProcessor tapProcessor;
+    @BeforeEach
+    void setUp() {
+        TripSystem tripSystem = new TripSystem();
+
+        Stop stop1 = tripSystem.addStop("Stop1");
+        Stop stop2 = tripSystem.addStop("Stop2");
+        Stop stop3 = tripSystem.addStop("Stop3");
+
+        tripSystem.addTrip(stop1, stop2, 3.25);
+        tripSystem.addTrip(stop2, stop3, 5.50);
+        tripSystem.addTrip(stop1, stop3, 7.30);
+
+        tapProcessor = new TapProcessor(tripSystem);
+    }
 
     @Test
     public void processUserTrip_should_return_one_start_incomplete_trip() {
-        List<Tap> taps = new ArrayList<>();
-        taps.add(new Tap(
+        HashMap<String, List<Tap>> taps = new HashMap<>();
+        taps.put("5500005555555559", new ArrayList<>());
+        taps.get("5500005555555559").add(new Tap(
                 1,
                 "22-01-2023 13:00:00",
                 TapType.ON,
@@ -24,25 +40,26 @@ public class TestProcessor {
                 "Bus37",
                 "5500005555555559"
         ));
-        List<Trip> trips = processUserTrip(taps);
+        List<UserTrip> trips = tapProcessor.processTaps(taps);
 
-        Assert.assertEquals(1, trips.size());
-        Trip trip = trips.getFirst();
-        Assert.assertNotNull(trip.getStatedAt()); //TODO: assert date values correctly
-        Assert.assertNull(trip.getFinishedAt());
-        Assert.assertEquals("Stop1", trip.getFromStopId());
-        Assert.assertNull(trip.getToStopId());
-        Assert.assertEquals("Company1", trip.getCompanyId());
-        Assert.assertEquals("Bus37", trip.getBusId());
-        Assert.assertEquals("5500005555555559", trip.getPan());
-        Assert.assertEquals(TripStatus.INCOMPLETE, trip.getTripStatus());
-        Assert.assertEquals(0, trip.getDurationSecs());
-        Assert.assertEquals(7.3, trip.getChangeAmount(), 0);
+        Assertions.assertEquals(1, trips.size());
+        UserTrip trip = trips.getFirst();
+        Assertions.assertNotNull(trip.getStatedAt()); //TODO: assert date values correctly
+        Assertions.assertNull(trip.getFinishedAt());
+        Assertions.assertEquals("Stop1", trip.getFromStopId());
+        Assertions.assertNull(trip.getToStopId());
+        Assertions.assertEquals("Company1", trip.getCompanyId());
+        Assertions.assertEquals("Bus37", trip.getBusId());
+        Assertions.assertEquals("5500005555555559", trip.getPan());
+        Assertions.assertEquals(TripStatus.INCOMPLETE, trip.getTripStatus());
+        Assertions.assertEquals(0, trip.getDurationSecs());
+        Assertions.assertEquals(7.3, trip.getChangeAmount(), 0);
     }
     @Test
     public void processUserTrip_should_return_one_end_incomplete_trip() {
-        List<Tap> taps = new ArrayList<>();
-        taps.add(new Tap(
+        HashMap<String, List<Tap>> taps = new HashMap<>();
+        taps.put("5500005555555559", new ArrayList<>());
+        taps.get("5500005555555559").add(new Tap(
                 1,
                 "22-01-2023 13:00:00",
                 TapType.OFF,
@@ -51,25 +68,26 @@ public class TestProcessor {
                 "Bus37",
                 "5500005555555559"
         ));
-        List<Trip> trips = processUserTrip(taps);
+        List<UserTrip> trips = tapProcessor.processTaps(taps);
 
-        Assert.assertEquals(1, trips.size());
-        Trip trip = trips.getFirst();
-        Assert.assertNull(trip.getStatedAt());
-        Assert.assertNotNull(trip.getFinishedAt());
-        Assert.assertEquals("Stop1", trip.getToStopId());
-        Assert.assertNull(trip.getFromStopId());
-        Assert.assertEquals("Company1", trip.getCompanyId());
-        Assert.assertEquals("Bus37", trip.getBusId());
-        Assert.assertEquals("5500005555555559", trip.getPan());
-        Assert.assertEquals(TripStatus.INCOMPLETE, trip.getTripStatus());
-        Assert.assertEquals(0, trip.getDurationSecs());
-        Assert.assertEquals(7.3, trip.getChangeAmount(), 0);
+        Assertions.assertEquals(1, trips.size());
+        UserTrip trip = trips.getFirst();
+        Assertions.assertNull(trip.getStatedAt());
+        Assertions.assertNotNull(trip.getFinishedAt());
+        Assertions.assertEquals("Stop1", trip.getToStopId());
+        Assertions.assertNull(trip.getFromStopId());
+        Assertions.assertEquals("Company1", trip.getCompanyId());
+        Assertions.assertEquals("Bus37", trip.getBusId());
+        Assertions.assertEquals("5500005555555559", trip.getPan());
+        Assertions.assertEquals(TripStatus.INCOMPLETE, trip.getTripStatus());
+        Assertions.assertEquals(0, trip.getDurationSecs());
+        Assertions.assertEquals(7.3, trip.getChangeAmount(), 0);
     }
     @Test
     public void processUserTrip_should_return_one_cancelled_trip() {
-        List<Tap> taps = new ArrayList<>();
-        taps.add(new Tap(
+        HashMap<String, List<Tap>> taps = new HashMap<>();
+        taps.put("5500005555555559", new ArrayList<>());
+        taps.get("5500005555555559").add(new Tap(
                 1,
                 "22-01-2023 13:00:00",
                 TapType.ON,
@@ -78,7 +96,7 @@ public class TestProcessor {
                 "Bus37",
                 "5500005555555559"
         ));
-        taps.add(new Tap(
+        taps.get("5500005555555559").add(new Tap(
                 2,
                 "22-01-2023 13:01:00",
                 TapType.OFF,
@@ -87,25 +105,26 @@ public class TestProcessor {
                 "Bus37",
                 "5500005555555559"
         ));
-        List<Trip> trips = processUserTrip(taps);
+        List<UserTrip> trips = tapProcessor.processTaps(taps);
 
-        Assert.assertEquals(1, trips.size());
-        Trip trip = trips.getFirst();
-        Assert.assertNotNull(trip.getStatedAt());
-        Assert.assertNotNull(trip.getFinishedAt());
-        Assert.assertEquals("Stop1", trip.getToStopId());
-        Assert.assertEquals("Stop1",trip.getFromStopId());
-        Assert.assertEquals("Company1", trip.getCompanyId());
-        Assert.assertEquals("Bus37", trip.getBusId());
-        Assert.assertEquals("5500005555555559", trip.getPan());
-        Assert.assertEquals(TripStatus.CANCELLED, trip.getTripStatus());
-        Assert.assertEquals(60, trip.getDurationSecs());
-        Assert.assertEquals(0, trip.getChangeAmount(), 0);
+        Assertions.assertEquals(1, trips.size());
+        UserTrip trip = trips.getFirst();
+        Assertions.assertNotNull(trip.getStatedAt());
+        Assertions.assertNotNull(trip.getFinishedAt());
+        Assertions.assertEquals("Stop1", trip.getToStopId());
+        Assertions.assertEquals("Stop1", trip.getFromStopId());
+        Assertions.assertEquals("Company1", trip.getCompanyId());
+        Assertions.assertEquals("Bus37", trip.getBusId());
+        Assertions.assertEquals("5500005555555559", trip.getPan());
+        Assertions.assertEquals(TripStatus.CANCELLED, trip.getTripStatus());
+        Assertions.assertEquals(60, trip.getDurationSecs());
+        Assertions.assertEquals(0, trip.getChangeAmount(), 0);
     }
     @Test
     public void processUserTrip_should_return_one_complete_trip() {
-        List<Tap> taps = new ArrayList<>();
-        taps.add(new Tap(
+        HashMap<String, List<Tap>> taps = new HashMap<>();
+        taps.put("5500005555555559", new ArrayList<>());
+        taps.get("5500005555555559").add(new Tap(
                 1,
                 "22-01-2023 13:00:00",
                 TapType.ON,
@@ -114,7 +133,7 @@ public class TestProcessor {
                 "Bus37",
                 "5500005555555559"
         ));
-        taps.add(new Tap(
+        taps.get("5500005555555559").add(new Tap(
                 2,
                 "22-01-2023 13:01:00",
                 TapType.OFF,
@@ -123,28 +142,29 @@ public class TestProcessor {
                 "Bus37",
                 "5500005555555559"
         ));
-        List<Trip> trips = processUserTrip(taps);
+        List<UserTrip> trips = tapProcessor.processTaps(taps);
 
-        Assert.assertEquals(1, trips.size());
-        Trip trip = trips.getFirst();
-        Assert.assertNotNull(trip.getStatedAt());
-        Assert.assertNotNull(trip.getFinishedAt());
-        Assert.assertEquals("Stop1", trip.getFromStopId());
-        Assert.assertEquals("Stop2",trip.getToStopId());
-        Assert.assertEquals("Company1", trip.getCompanyId());
-        Assert.assertEquals("Bus37", trip.getBusId());
-        Assert.assertEquals("5500005555555559", trip.getPan());
-        Assert.assertEquals(TripStatus.COMPLETED, trip.getTripStatus());
-        Assert.assertEquals(60, trip.getDurationSecs());
-        Assert.assertEquals(3.25, trip.getChangeAmount(), 0);
+        Assertions.assertEquals(1, trips.size());
+        UserTrip trip = trips.getFirst();
+        Assertions.assertNotNull(trip.getStatedAt());
+        Assertions.assertNotNull(trip.getFinishedAt());
+        Assertions.assertEquals("Stop1", trip.getFromStopId());
+        Assertions.assertEquals("Stop2", trip.getToStopId());
+        Assertions.assertEquals("Company1", trip.getCompanyId());
+        Assertions.assertEquals("Bus37", trip.getBusId());
+        Assertions.assertEquals("5500005555555559", trip.getPan());
+        Assertions.assertEquals(TripStatus.COMPLETED, trip.getTripStatus());
+        Assertions.assertEquals(60, trip.getDurationSecs());
+        Assertions.assertEquals(3.25, trip.getChangeAmount(), 0);
     }
 
     @Test
     public void processUserTrip_empty_should_return_no_trips() {
-        List<Tap> taps = new ArrayList<>();
+        HashMap<String, List<Tap>> taps = new HashMap<>();
+        taps.put("5500005555555559", new ArrayList<>());
 
-        List<Trip> trips = processUserTrip(taps);
+        List<UserTrip> trips = tapProcessor.processTaps(taps);
 
-        Assert.assertEquals(0, trips.size());
+        Assertions.assertEquals(0, trips.size());
     }
 }

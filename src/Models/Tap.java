@@ -10,7 +10,7 @@ public class Tap {
     int id;
     ZonedDateTime dateTime;
     TapType tapType;
-    String stopId;
+    Stop stop;
     String companyId;
     String busId;
     String pan;
@@ -21,7 +21,7 @@ public class Tap {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormat).withZone(ZoneOffset.UTC);
         this.dateTime = ZonedDateTime.parse(dateTime, dateTimeFormatter);
         this.tapType = tapType;
-        this.stopId = stopId;
+        this.stop = new Stop(stopId);
         this.companyId = companyId;
         this.busId = busId;
         this.pan = pan;
@@ -33,7 +33,7 @@ public class Tap {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormat).withZone(ZoneOffset.UTC);
         this.dateTime = ZonedDateTime.parse(fields[1], dateTimeFormatter);
         this.tapType = TapType.valueOf(fields[2].toUpperCase());
-        this.stopId = fields[3];
+        this.stop = new Stop(fields[3]);
         this.companyId = fields[4];
         this.busId = fields[5];
         this.pan = fields[6];
@@ -47,8 +47,8 @@ public class Tap {
         return tapType;
     }
 
-    public String getStopId() {
-        return stopId;
+    public Stop getStop() {
+        return stop;
     }
 
     public String getCompanyId() {
