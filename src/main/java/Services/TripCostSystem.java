@@ -38,32 +38,21 @@ public class TripCostSystem {
         }
     }
 
-    public double calculateCostBetweenStops(Stop fromStopId) {
-        return calculateCostBetweenStops(fromStopId, null);
+    public double calculateIncompleteTripCost(Stop fromStopId) {
+        Double value = highestCostForStop.get(fromStopId.toString());
+        if (value == null) {
+            System.out.println("Unable to get trip cost as stop does not exist");
+            return UNKNOWN_TRIP_COST;
+        }
+        return value;
     }
 
     public double calculateCostBetweenStops(Stop fromStopId, Stop toStopId) {
-        if(fromStopId == null && toStopId != null) {
-            return getHighestTripCost(toStopId);
-        }
-        if(toStopId == null && fromStopId != null) {
-            return getHighestTripCost(fromStopId);
-        }
-
         TripCost trip = tripCosts.get(fromStopId + "_" + toStopId);
         if (trip == null) {
             System.out.println("Unable to get trip cost as trip does not exist");
             return UNKNOWN_TRIP_COST;
         }
         return trip.getCost();
-    }
-
-    private double getHighestTripCost(Stop stop) {
-        Double value = highestCostForStop.get(stop.toString());
-        if (value == null) {
-            System.out.println("Unable to get trip cost as stop does not exist");
-            return UNKNOWN_TRIP_COST;
-        }
-        return value;
     }
 }

@@ -26,6 +26,7 @@ public final class CSVWriter {
             System.out.println("Unable to output to file due to error: " + e.getMessage());
         }
     }
+
     public static BufferedWriter openWriter(String filename) throws IOException {
         FileWriter writer = new FileWriter(filename);
         return new BufferedWriter(writer);

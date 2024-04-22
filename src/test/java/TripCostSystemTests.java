@@ -25,12 +25,18 @@ public class TripCostSystemTests {
     }
 
     @ParameterizedTest
-    @MethodSource("stopsInputAndExpectedValue")
-    public void calculateCost_should_produce_correct_cost(Stop fromStop, Stop toStop, double expectedValue) {
+    @MethodSource("completeStops")
+    public void calculateCostBetweenStops_should_produce_correct_cost(Stop fromStop, Stop toStop, double expectedValue) {
         Assertions.assertEquals(expectedValue, tripCostSystem.calculateCostBetweenStops(fromStop, toStop), 0);
     }
 
-    static Stream<Arguments> stopsInputAndExpectedValue() {
+    @ParameterizedTest
+    @MethodSource("incompleteStops")
+    public void calculateIncompleteTripCost_should_produce_correct_cost(Stop fromStop, double expectedValue) {
+        Assertions.assertEquals(expectedValue, tripCostSystem.calculateIncompleteTripCost(fromStop), 0);
+    }
+
+    static Stream<Arguments> completeStops() {
         return Stream.of(
             Arguments.arguments(new Stop("Stop1"), new Stop("Stop2"), 3.25),
             Arguments.arguments(new Stop("Stop2"), new Stop("Stop3"), 5.5),
@@ -38,14 +44,16 @@ public class TripCostSystemTests {
             Arguments.arguments(new Stop("Stop2"), new Stop("Stop1"), 3.25),
             Arguments.arguments(new Stop("Stop3"), new Stop("Stop2"), 5.5),
             Arguments.arguments(new Stop("Stop1"), new Stop("Stop3"), 7.30),
-            Arguments.arguments(new Stop("Stop1"), null, 7.30),
-            Arguments.arguments(new Stop("Stop2"), null, 5.50),
-            Arguments.arguments(new Stop("Stop3"), null, 7.30),
-            Arguments.arguments(null, new Stop("Stop1"), 7.30),
-            Arguments.arguments(null, new Stop("Stop2"), 5.50),
-            Arguments.arguments(null, new Stop("Stop3"), 7.30),
-            Arguments.arguments(null, new Stop("Stop4"), 0),
             Arguments.arguments(new Stop("Stop4"), new Stop("Stop3"), 0)
+        );
+    }
+
+    static Stream<Arguments> incompleteStops() {
+        return Stream.of(
+                Arguments.arguments(new Stop("Stop1"), 7.30),
+                Arguments.arguments(new Stop("Stop2"), 5.50),
+                Arguments.arguments(new Stop("Stop3"), 7.30),
+                Arguments.arguments(new Stop("Stop4"), 0)
         );
     }
 }

@@ -44,6 +44,7 @@ public class TapProcessor {
 
             if(isTripIncomplete(currentTap, nextTap)) {
                 trips.add(getIncompleteTrip(currentTap));
+                // When the trip is incomplete, only the current tap is processed. Ensure the next tap is processed its own trip
                 currentTap = nextTap;
                 continue;
             }
@@ -98,12 +99,13 @@ public class TapProcessor {
     }
 
     private UserTrip getIncompleteTrip(Tap currentTap) {
+        double cost = this.tripCostSystem.calculateIncompleteTripCost(currentTap.getStop());
         return currentTap.getTapType() == TapType.ON
                 ? new IncompleteTapOnTrip(
                     currentTap,
-                    this.tripCostSystem.calculateCostBetweenStops(currentTap.getStop()))
+                    cost)
                 : new IncompleteTapOffTrip(
                         currentTap,
-                        this.tripCostSystem.calculateCostBetweenStops(currentTap.getStop()));
+                    cost);
     }
 }
