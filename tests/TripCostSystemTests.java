@@ -1,5 +1,5 @@
 import Models.Stop;
-import Services.TripSystem;
+import Services.TripCostSystem;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,29 +8,29 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-public class TripCostTests {
+public class TripCostSystemTests {
 
-    TripSystem tripSystem;
+    TripCostSystem tripCostSystem;
     @BeforeEach
     void setUp() {
-        tripSystem = new TripSystem();
+        tripCostSystem = new TripCostSystem();
 
-        Stop stop1 = tripSystem.addStop("Stop1");
-        Stop stop2 = tripSystem.addStop("Stop2");
-        Stop stop3 = tripSystem.addStop("Stop3");
+        Stop stop1 = tripCostSystem.addStop("Stop1");
+        Stop stop2 = tripCostSystem.addStop("Stop2");
+        Stop stop3 = tripCostSystem.addStop("Stop3");
 
-        tripSystem.addTrip(stop1, stop2, 3.25);
-        tripSystem.addTrip(stop2, stop3, 5.50);
-        tripSystem.addTrip(stop1, stop3, 7.30);
+        tripCostSystem.addTrip(stop1, stop2, 3.25);
+        tripCostSystem.addTrip(stop2, stop3, 5.50);
+        tripCostSystem.addTrip(stop1, stop3, 7.30);
     }
 
     @ParameterizedTest
-    @MethodSource("stopProvider")
+    @MethodSource("stopsInputAndExpectedValue")
     public void calculateCost_should_produce_correct_cost(Stop fromStop, Stop toStop, double expectedValue) {
-        Assertions.assertEquals(expectedValue, tripSystem.calculateCostBetweenStops(fromStop, toStop), 0);
+        Assertions.assertEquals(expectedValue, tripCostSystem.calculateCostBetweenStops(fromStop, toStop), 0);
     }
 
-    static Stream<Arguments> stopProvider() {
+    static Stream<Arguments> stopsInputAndExpectedValue() {
         return Stream.of(
             Arguments.arguments(new Stop("Stop1"), new Stop("Stop2"), 3.25),
             Arguments.arguments(new Stop("Stop2"), new Stop("Stop3"), 5.5),

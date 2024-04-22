@@ -2,7 +2,7 @@ package Models;
 
 import java.time.ZonedDateTime;
 
-import static Services.TripSystem.CANCELLED_TRIP_COST;
+import static Services.TripCostSystem.CANCELLED_TRIP_COST;
 
 public class CancelledTrip extends UserTrip {
     public CancelledTrip(ZonedDateTime startedAt, ZonedDateTime finishedAt, Stop fromStop, Stop toStop, String companyId, String busId, String pan) {

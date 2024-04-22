@@ -24,5 +24,6 @@ public class StopComparisonTests {
         Assert.assertFalse(stop1.equals(stop1Again));
         Assert.assertFalse(stop1Again.equals(stop1));
         Assert.assertFalse(stop1.equals("Stop2"));
+        Assert.assertFalse(stop1.equals(2));
     }
 }

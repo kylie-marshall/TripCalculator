@@ -5,14 +5,14 @@ import Models.TripCost;
 
 import java.util.HashMap;
 
-public class TripSystem {
+public class TripCostSystem {
     HashMap<String, TripCost> tripCosts;
     HashMap<String, Double> highestCostForStop;
 
     public static double CANCELLED_TRIP_COST = 0;
     public static double UNKNOWN_TRIP_COST = 0;
 
-    public TripSystem() {
+    public TripCostSystem() {
         this.tripCosts = new HashMap<>();
         this.highestCostForStop = new HashMap<>();
     }

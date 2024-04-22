@@ -3,3 +3,7 @@ Started, Finished, DurationSecs, FromStopId, ToStopId, ChargeAmount, CompanyId, 
 null, 24-01-2023 16:30:00, 0, null, Stop2, $5.5, Company1, Bus37, 5500005555555559, INCOMPLETE
 22-01-2023 09:20:00, null, 0, Stop3, null, $7.3, Company1, Bus36, 4111111111111111, INCOMPLETE
 23-01-2023 08:00:00, 23-01-2023 08:02:00, 120, Stop1, Stop1, $0.0, Company1, Bus37, 4111111111111111, CANCELLED
+24-01-2023 16:31:00, null, 0, Stop2, null, $5.5, Company2, Bus37, 630495060000000000, INCOMPLETE
+null, 24-01-2023 16:32:00, 0, null, Stop2, $5.5, Company3, Bus37, 630495060000000000, INCOMPLETE
+24-01-2023 16:33:00, null, 0, Stop1, null, $7.3, Company1, Bus37, 630495060000000000, INCOMPLETE
+null, 24-01-2023 16:34:00, 0, null, Stop2, $5.5, Company1, Bus38, 630495060000000000, INCOMPLETE

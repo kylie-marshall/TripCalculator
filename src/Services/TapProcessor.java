@@ -5,9 +5,9 @@ import Models.*;
 import java.util.*;
 
 public class TapProcessor {
-    TripSystem tripSystem;
-    public TapProcessor(TripSystem tripSystem) {
-        this.tripSystem = tripSystem;
+    TripCostSystem tripCostSystem;
+    public TapProcessor(TripCostSystem tripCostSystem) {
+        this.tripCostSystem = tripCostSystem;
     }
 
     /*
@@ -93,7 +93,7 @@ public class TapProcessor {
                 nextTap.getDateTime(),
                 currentTap.getStop(),
                 nextTap.getStop(),
-                this.tripSystem.calculateCostBetweenStops(currentTap.getStop(), nextTap.getStop()),
+                this.tripCostSystem.calculateCostBetweenStops(currentTap.getStop(), nextTap.getStop()),
                 currentTap.getCompanyId(),
                 currentTap.getBusId(),
                 currentTap.getPan());
@@ -102,7 +102,7 @@ public class TapProcessor {
     private UserTrip getIncompleteTrip(Tap currentTap) {
         return new IncompleteTrip(
                 currentTap,
-                this.tripSystem.calculateCostBetweenStops(currentTap.getStop(), null)
+                this.tripCostSystem.calculateCostBetweenStops(currentTap.getStop(), null)
         );
     }
 }
