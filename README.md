@@ -23,12 +23,15 @@ Started, Finished, DurationSecs, FromStopId, ToStopId, ChargeAmount, CompanyId, 
 
 ### Dependencies
 
-This app has been built using Java openjdk-22.
+This app has been built using Java openjdk-22 and Maven 3.9.6
 
 ### Build and run
 
-Build and run in Intellij IDEA. 
-Apologies, I'm trying to learn the command line tools. 
+```dtd
+mvn compile
+mvn package
+java -jar target/gs-maven-0.1.0.jar
+```
 
 
 ### Assumptions
