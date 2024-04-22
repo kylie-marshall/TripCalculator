@@ -21,7 +21,11 @@ Started, Finished, DurationSecs, FromStopId, ToStopId, ChargeAmount, CompanyId, 
 22-01-2018 13:00:00, 22-01-2018 13:05:00, 900, Stop1, Stop2, $3.25, Company1, Bus37, 5500005555555559, COMPLETED
 ```
 
-## Build and run
+### Dependencies
+
+This app has been built using Java openjdk-22.
+
+### Build and run
 
 Build and run in Intellij IDEA. 
 Apologies, I'm trying to learn the command line tools. 
