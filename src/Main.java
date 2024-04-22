@@ -4,7 +4,6 @@ import Models.UserTrip;
 import Services.TapProcessor;
 import Services.TripSystem;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
