@@ -5,15 +5,17 @@ import Models.*;
 import java.util.*;
 
 public class TapProcessor {
-    TripCostSystem tripCostSystem;
+
+    private final TripCostSystem tripCostSystem;
+
     public TapProcessor(TripCostSystem tripCostSystem) {
         this.tripCostSystem = tripCostSystem;
     }
 
-    /*
-     * for each user, process their taps individually
+    /**
+     * For each user, process their taps individually
      */
-    public List<UserTrip> processTaps(HashMap<String, List<Tap>> taps) {
+    public List<UserTrip> processTaps(Map<String, List<Tap>> taps) {
         List<UserTrip> trips = new ArrayList<>();
 
         for(Map.Entry<String, List<Tap>> userTaps : taps.entrySet()) {
@@ -23,7 +25,7 @@ public class TapProcessor {
         return trips;
     }
 
-    /*
+    /**
      * Process each tap for a user, calculating their trips including cost
      */
     private List<UserTrip> processUserTaps(List<Tap> taps) {
@@ -33,33 +35,28 @@ public class TapProcessor {
             return trips;
         }
 
-        int currentTapIndex = 0;
+        ListIterator<Tap> it = taps.listIterator();
+        Tap currentTap = it.next();
         Tap nextTap;
 
         do {
-            Tap currentTap = taps.size() >= currentTapIndex + 1 ? taps.get(currentTapIndex) : null;
-
-            if(currentTap == null) {
-                break;
-            }
-
-            nextTap = taps.size() >= currentTapIndex + 2 ? taps.get(currentTapIndex + 1) : null;
+            nextTap =  it.hasNext() ? it.next() : null;
 
             if(isTripIncomplete(currentTap, nextTap)) {
                 trips.add(getIncompleteTrip(currentTap));
-                currentTapIndex += 1;
+                currentTap = nextTap;
                 continue;
             }
 
             if(isTripCancelled(currentTap, nextTap)) {
                 trips.add(getCancelledTrip(currentTap, nextTap));
-                currentTapIndex += 2;
-                continue;
+            }
+            else {
+                trips.add(getCompleteTrip(currentTap, nextTap));
             }
 
-            trips.add(getCompleteTrip(currentTap, nextTap));
-            currentTapIndex += 2;
-        } while (nextTap != null);
+            currentTap = it.hasNext() ? it.next() : null;
+        } while (currentTap != null);
 
         return trips;
     }
@@ -71,6 +68,7 @@ public class TapProcessor {
                 || !Objects.equals(currentTap.getBusId(), nextTap.getBusId())
                 || !Objects.equals(currentTap.getCompanyId(), nextTap.getCompanyId());
     }
+
     private static boolean isTripCancelled(Tap currentTap, Tap nextTap) {
         return Objects.equals(currentTap.getCompanyId(), nextTap.getCompanyId()) &&
                 Objects.equals(currentTap.getBusId(), nextTap.getBusId()) &&
@@ -100,9 +98,12 @@ public class TapProcessor {
     }
 
     private UserTrip getIncompleteTrip(Tap currentTap) {
-        return new IncompleteTrip(
-                currentTap,
-                this.tripCostSystem.calculateCostBetweenStops(currentTap.getStop(), null)
-        );
+        return currentTap.getTapType() == TapType.ON
+                ? new IncompleteTapOnTrip(
+                    currentTap,
+                    this.tripCostSystem.calculateCostBetweenStops(currentTap.getStop()))
+                : new IncompleteTapOffTrip(
+                        currentTap,
+                        this.tripCostSystem.calculateCostBetweenStops(currentTap.getStop()));
     }
 }

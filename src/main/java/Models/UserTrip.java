@@ -6,19 +6,19 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static Models.Constants.DateFormat;
+import static Models.Constants.DATE_FORMAT;
 
 public abstract class UserTrip {
-    ZonedDateTime startedAt;
-    ZonedDateTime finishedAt;
-    long durationSecs;
-    Stop fromStop;
-    Stop toStop;
-    double changeAmount;
-    String companyId;
-    String busId;
-    String pan;
-    TripStatus tripStatus;
+    private final ZonedDateTime startedAt;
+    private final ZonedDateTime finishedAt;
+    private final long durationSecs;
+    private final Stop fromStop;
+    private final Stop toStop;
+    private final double changeAmount;
+    private final String companyId;
+    private final String busId;
+    private final String pan;
+    private final TripStatus tripStatus;
 
     public UserTrip(ZonedDateTime startedAt, ZonedDateTime finishedAt,
                     Stop fromStop, Stop toStop, double chargeAmount, String companyId,
@@ -36,7 +36,7 @@ public abstract class UserTrip {
     }
 
     public void WriteToCSV(BufferedWriter bufferedWriter) throws IOException {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormat);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         String startDate = startedAt == null ? "null" : startedAt.format(dateTimeFormatter);
         String finishedDate = finishedAt == null ? "null" : finishedAt.format(dateTimeFormatter);
 

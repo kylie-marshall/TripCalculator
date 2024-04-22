@@ -3,7 +3,7 @@ package Models;
 import java.util.Objects;
 
 public class Stop {
-    String stopId;
+    private final String stopId;
 
     public Stop(String stopId) {
         this.stopId = stopId;
@@ -13,6 +13,7 @@ public class Stop {
     public String toString() {
         return stopId;
     }
+
     // Override equals method
     @Override
     public boolean equals(Object obj) {

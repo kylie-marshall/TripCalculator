@@ -21,8 +21,8 @@ public class CSVWriterTests {
         List<UserTrip > trips = new ArrayList<>();
         trips.add(new CompletedTrip(today, today.plusHours(1), new Stop("Stop1"), new Stop("Stop2"), 3.25,"Company1", "Bus1", "34343434343434"));
         trips.add(new CancelledTrip(today, today.plusMinutes(1), new Stop("Stop1"), new Stop("Stop1"), "Company1", "Bus1", "34343434343434"));
-        trips.add(new IncompleteTrip(new Tap(1, "01-04-2024 13:00:00", TapType.ON, "Stop1", "Company1", "Bus1", "34343434343434"), 7.3));
-        trips.add(new IncompleteTrip(new Tap(1, "01-04-2024 13:00:00", TapType.OFF, "Stop1", "Company1", "Bus1", "34343434343434"), 7.3));
+        trips.add(new IncompleteTapOnTrip(new Tap(1, "01-04-2024 13:00:00", TapType.ON, "Stop1", "Company1", "Bus1", "34343434343434"), 7.3));
+        trips.add(new IncompleteTapOffTrip(new Tap(1, "01-04-2024 13:00:00", TapType.OFF, "Stop1", "Company1", "Bus1", "34343434343434"), 7.3));
 
         writeTripsToCSV(bufferedWriter, trips);
 

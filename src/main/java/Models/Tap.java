@@ -4,21 +4,20 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static Models.Constants.DateFormat;
+import static Models.Constants.DATE_FORMAT;
 
 public class Tap {
-    int id;
-    ZonedDateTime dateTime;
-    TapType tapType;
-    Stop stop;
-    String companyId;
-    String busId;
-    String pan;
-
+    private final int id;
+    private final ZonedDateTime dateTime;
+    private final TapType tapType;
+    private final Stop stop;
+    private final String companyId;
+    private final String busId;
+    private final String pan;
 
     public Tap(int id, String dateTime, TapType tapType, String stopId, String companyId, String busId, String pan) {
         this.id = id;
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormat).withZone(ZoneOffset.UTC);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneOffset.UTC);
         this.dateTime = ZonedDateTime.parse(dateTime, dateTimeFormatter);
         this.tapType = tapType;
         this.stop = new Stop(stopId);
@@ -26,11 +25,12 @@ public class Tap {
         this.busId = busId;
         this.pan = pan;
     }
+
     public Tap(String commaSeparatedInput) {
         String[] fields = commaSeparatedInput.split(", ");
 
         this.id = Integer.parseInt(fields[0]);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormat).withZone(ZoneOffset.UTC);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneOffset.UTC);
         this.dateTime = ZonedDateTime.parse(fields[1], dateTimeFormatter);
         this.tapType = TapType.valueOf(fields[2].toUpperCase());
         this.stop = new Stop(fields[3]);

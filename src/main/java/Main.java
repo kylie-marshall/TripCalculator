@@ -5,8 +5,8 @@ import Services.TapProcessor;
 import Services.TripCostSystem;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static Services.CSVParser.openReader;
 import static Services.CSVParser.parseCSV;
@@ -25,11 +25,11 @@ public class Main {
         company1TripCostSystem.addTrip(stop2, stop3, 5.50);
         company1TripCostSystem.addTrip(stop1, stop3, 7.30);
 
-        HashMap<String, List<Tap>> taps =  parseCSV(openReader("./src/taps.csv"));
+        Map<String, List<Tap>> taps = parseCSV(openReader("./src/main/java/taps.csv"));
 
         TapProcessor tapProcessor = new TapProcessor(company1TripCostSystem);
         List<UserTrip> trips = tapProcessor.processTaps(taps);
 
-        writeTripsToCSV(openWriter("./src/trips.csv"), trips);
+        writeTripsToCSV(openWriter("./src/main/java/trips.csv"), trips);
     }
 }
